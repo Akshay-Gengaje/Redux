@@ -1,0 +1,84 @@
+/* Prevent Tailwind default styles from affecting the blog */
+.custom-blog-content * {
+    all: unset; /* Reset all inherited styles */
+  }
+  
+  /* Apply custom styles */
+  .custom-blog-content {
+    font-family: 'Georgia', serif;
+    color: #333;
+    line-height: 1.8;
+    text-align: justify;
+    padding: 20px;
+  }
+  
+  /* Style headings */
+  .custom-blog-content h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #2c3e50;
+  }
+  
+  .custom-blog-content h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #34495e;
+  }
+  
+  .custom-blog-content h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  /* Style paragraphs */
+  .custom-blog-content p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  
+  /* Style lists */
+  .custom-blog-content ul {
+    margin-left: 20px;
+    padding-left: 15px;
+    list-style-type: disc;
+  }
+  
+  .custom-blog-content ol {
+    margin-left: 20px;
+    padding-left: 15px;
+    list-style-type: decimal;
+  }
+  
+  .custom-blog-content li {
+    margin-bottom: 5px;
+  }
+  
+  /* Style code blocks */
+  .custom-blog-content pre {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .custom-blog-content code {
+    background: #eee;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+  
+  /* Blockquote styling */
+  .custom-blog-content blockquote {
+    border-left: 4px solid #3498db;
+    padding-left: 15px;
+    margin: 10px 0;
+    font-style: italic;
+    color: #555;
+  }
+  

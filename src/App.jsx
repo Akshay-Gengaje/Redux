@@ -1,10 +1,13 @@
+import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/theme/theme-provider";
 import AppLayout from "./layout/AppLayout";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <AppLayout />
+      <BrowserRouter>
+        <AppLayout />
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

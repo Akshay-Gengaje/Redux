@@ -125,3 +125,28 @@
 }
 
 
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px; /* Adjust scrollbar width */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #475569; /* Slate-600 for dark mode */
+  border-radius: 9999px; /* Rounded full */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #1e293b; /* Slate-800 for dark mode */
+  border-radius: 9999px; /* Rounded full */
+}
+
+/* Light mode styles */
+@media (prefers-color-scheme: light) {
+  ::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1; /* Light gray */
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #f1f5f9; /* Light track */
+  }
+}
