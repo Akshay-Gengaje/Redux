@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import Moives from "@/pages/project/Moives";
 import DocWriter from "@/components/doc/DocWriter";
 import DocPage from "@/components/doc/DocPage";
+import MoviesLayout from "@/layout/movies/MoviesLayout";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/project" element={<Moives />} />
+      <Route path="/project" element={<MoviesLayout />} />
       <Route path="/create" element={<DocWriter />} />
       <Route path="/doc/:id" element={<DocPage />} />
     </Routes>

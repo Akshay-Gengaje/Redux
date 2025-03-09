@@ -1,33 +1,49 @@
+import React, { useMemo, useCallback } from "react";
 import MovieCard from "@/components/movies/MovieCard";
 import MovieCardSkeleton from "@/components/movies/MovieCardSkeleton";
 import useMovies from "@/hooks/useMovies";
-import React from "react";
 
 const Movies = () => {
-  const { data, loading, error } = useMovies(
-    "3/movie/popular",
-    "GET",
-    null,
-    {
-      language: "en-US",
-      page: 1,
-    },
+  const { data, loading, error } = useMovies("3/movie/popular", "GET", null, {
+    language: "en-US",
+    page: 1,
+  });
+
+  // Memoize movie list processing
+  const movies = useMemo(() => data?.results || [], [data]);
+  // Memoize skeleton placeholders
+  const skeletons = useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, index) => (
+        <MovieCardSkeleton key={index} />
+      )),
     []
   );
-  console.log(data);
+
+  // Memoized function to render movie cards
+  const renderMovieCard = useCallback(
+    (movie) => (
+      <MovieCard
+        key={movie.id}
+        image={movie.backdrop_path || movie.poster_path} // Fallback to poster_path
+        title={movie.original_title}
+        price={movie.popularity}
+      />
+    ),
+    []
+  );
+
+  if (error) {
+    return (
+      <p className="text-red-500 text-center w-full">
+        Failed to load movies. Please try again.
+      </p>
+    );
+  }
+
   return (
-    <div className="flex justify-between flex-wrap gap-5">
-      {loading
-        ? // Show 20 Skeleton Cards while loading
-          [...Array(20)].map((_, index) => <MovieCardSkeleton key={index} />)
-        : // Show Movie Cards when data is available
-          data?.results?.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              image={movie?.backdrop_path}
-              title={movie.original_title}
-            />
-          ))}
+    <div className="flex flex-wrap justify-between gap-5">
+      {loading ? skeletons : movies.map(renderMovieCard)}
     </div>
   );
 };
