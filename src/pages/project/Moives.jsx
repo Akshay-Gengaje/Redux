@@ -25,6 +25,7 @@ const Movies = () => {
     (movie) => (
       <MovieCard
         key={movie.id}
+        movie={movie}
         image={movie.backdrop_path || movie.poster_path} // Fallback to poster_path
         title={movie.original_title}
         price={movie.popularity}
