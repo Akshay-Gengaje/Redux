@@ -2,21 +2,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash, Minus, Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { decreaseQuantity, increaseQuantity } from "@/store/movies/actions";
+import { decreaseQuantity, increaseQuantity, removeItem } from "@/store/movies/actions";
 
 export default function Cart() {
-  const cart = useSelector((state) => state.movies);
+  const cart = useSelector((state) => state?.movies) || {};
   const dispatch = useDispatch();
   console.log(cart);
 
-  const totalPrice = useSelector((state) => state.total);
+  const totalCost = useSelector((state) => state?.totalCost) || 0;
 
   return (
     <div className="container mx-auto p-6">
       <p className="text-2xl font-bold mb-6">Shopping Cart</p>
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4">
-          {cart.map((item) => (
+          {Object.values(cart).map((item) => (
             <Card key={item.id} className="flex flex-row items-center p-4">
               <img
                 src={
@@ -52,7 +52,7 @@ export default function Cart() {
               <Button
                 variant="destructive"
                 size="icon"
-                onClick={() => removeItem(item.id)}
+                onClick={() => dispatch(removeItem(item.id))}
               >
                 <Trash size={16} />
               </Button>
@@ -63,7 +63,7 @@ export default function Cart() {
           <CardContent>
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <p className="text-gray-500 mb-2">
-              Total: <span className="font-bold">${totalPrice.toFixed(2)}</span>
+              Total: <span className="font-bold">${totalCost?.toFixed(2)}</span>
             </p>
             <Button className="w-full mt-4">Proceed to Checkout</Button>
           </CardContent>

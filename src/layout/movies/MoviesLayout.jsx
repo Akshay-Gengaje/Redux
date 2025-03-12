@@ -6,9 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const MoviesLayout = () => {
-  const total = useSelector((state) => state.total);
-
-  const cartCount = 3; // Example count (You can replace it with dynamic state)
+  const total = useSelector((state) => state?.totalCost);
+  const cartCount = useSelector((state) => state?.totalItems) || 0;
   const navigate = useNavigate();
   return (
     <div>
@@ -22,8 +21,10 @@ const MoviesLayout = () => {
           <div className="relative">
             <FaCartShopping />
             {cartCount > 0 && (
-              <span className="absolute -top-3.5 -right-3.5 bg-red-500 text-white
-               text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+              <span
+                className="absolute -top-3.5 -right-3.5 bg-red-500 text-white
+               text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"
+              >
                 {cartCount}
               </span>
             )}

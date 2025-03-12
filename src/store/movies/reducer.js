@@ -2,74 +2,90 @@ import {
   ADD_TO_CART,
   DECREASE_QUANTITY,
   INCREASE_QUANTITY,
+  REMOVE_ITEM,
 } from "./actionTypes";
 
 const initialState = {
-  movies: [],
-  total: 0,
+  movies: {}, // Object with movie.id as keys
+  totalCost: 0, // Total cost of cart
+  totalItems: 0, // Total number of items including quantities
+  distinctItems: 0, // Total number of distinct movies
 };
 
 export const moviesReducer = (state = initialState, action) => {
   console.log(action);
+
   switch (action.type) {
     case ADD_TO_CART: {
-      const existingMovie = state.movies.find(
-        (movie) => movie.id === action.payload.id
-      );
+      const { id, popularity } = action.payload;
+      const existingMovie = state.movies[id];
 
-      if (existingMovie) {
-        // Increase quantity if movie exist in cart
-        return {
-          ...state,
-          movies: state.movies.map((movie) =>
-            movie.id === action.payload.id
-              ? { ...movie, quantity: movie.quantity + 1 }
-              : movie
-          ),
-          total: state.total + action.payload.popularity,
-        };
-      } else {
-        // If movie doesn't exist, add to cart
-        return {
-          ...state,
-          movies: [...state.movies, { ...action.payload, quantity: 1 }],
-          total: state.total + action.payload.popularity,
-        };
-      }
-    }
-
-    case INCREASE_QUANTITY: {
-      return {
-        ...state,
-        movies: state.movies.map((movie) =>
-          movie.id === action.payload
-            ? { ...movie, quantity: movie.quantity + 1 }
-            : movie
-        ),
-        total:
-          state.total +
-          (state.movies.find((movie) => movie.id === action.payload)
-            ?.popularity || 0),
+      const updatedMovies = {
+        ...state.movies,
+        [id]: existingMovie
+          ? { ...existingMovie, quantity: existingMovie.quantity + 1 }
+          : { ...action.payload, quantity: 1 },
       };
-    }
-
-    case DECREASE_QUANTITY: {
-      const movie = state.movies.find((movie) => movie.id === action.payload);
-
-      if (!movie) return state; // If movie doesn't exist, return current state
-
-      const updatedMovies = state.movies
-        .map((movie) =>
-          movie.id === action.payload
-            ? { ...movie, quantity: movie.quantity - 1 }
-            : movie
-        )
-        .filter((movie) => movie.quantity > 0); // Remove movies with quantity 0
 
       return {
         ...state,
         movies: updatedMovies,
-        total: state.total - movie.popularity,
+        totalCost: state.totalCost + popularity,
+        totalItems: state.totalItems + 1,
+        distinctItems: Object.keys(updatedMovies).length, // Count unique movies
+      };
+    }
+
+    case INCREASE_QUANTITY: {
+      const movie = state.movies[action.payload];
+
+      if (!movie) return state;
+
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          [action.payload]: { ...movie, quantity: movie.quantity + 1 },
+        },
+        totalCost: state.totalCost + movie.popularity,
+        totalItems: state.totalItems + 1, // Increase total item count
+      };
+    }
+
+    case DECREASE_QUANTITY: {
+      const movie = state.movies[action.payload];
+
+      if (!movie) return state;
+
+      const updatedMovies = { ...state.movies };
+      if (movie.quantity === 1) {
+        delete updatedMovies[action.payload];
+      } else {
+        updatedMovies[action.payload] = { ...movie, quantity: movie.quantity - 1 };
+      }
+
+      return {
+        ...state,
+        movies: updatedMovies,
+        totalCost: state.totalCost - movie.popularity,
+        totalItems: state.totalItems - 1, // Decrease total item count
+        distinctItems: Object.keys(updatedMovies).length, // Recalculate distinct items
+      };
+    }
+
+    case REMOVE_ITEM: {
+      const movie = state.movies[action.payload];
+      if (!movie) return state;
+
+      const updatedMovies = { ...state.movies };
+      delete updatedMovies[action.payload];
+
+      return {
+        ...state,
+        movies: updatedMovies,
+        totalCost: state.totalCost - movie.popularity * movie.quantity, // Reduce total based on quantity
+        totalItems: state.totalItems - movie.quantity, // Remove all instances of that movie
+        distinctItems: Object.keys(updatedMovies).length, // Update distinct count
       };
     }
 
